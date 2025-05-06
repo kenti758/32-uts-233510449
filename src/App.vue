@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 // Daftar kegiatan (dengan properti 'done')
 const activities = ref([
@@ -9,6 +9,9 @@ const activities = ref([
 
 // Input kegiatan baru
 const newActivity = ref("");
+
+// Filter aktif: true = tampilkan hanya yang belum selesai
+const showOnlyUndone = ref(false);
 
 // Fungsi menambah kegiatan
 const addActivity = () => {
@@ -27,10 +30,12 @@ const removeActivity = (id) => {
   activities.value = activities.value.filter(activity => activity.id !== id);
 };
 
-// Fungsi toggle centang selesai (opsional, bisa dihapus kalau pakai v-model)
-const toggleDone = (activity) => {
-  activity.done = !activity.done;
-};
+// Data kegiatan yang akan ditampilkan (tergantung filter)
+const filteredActivities = computed(() => {
+  return showOnlyUndone.value
+    ? activities.value.filter(activity => !activity.done)
+    : activities.value;
+});
 </script>
 
 <template>
@@ -43,10 +48,18 @@ const toggleDone = (activity) => {
       <button @click="addActivity">Tambah</button>
     </div>
 
+    <!-- Filter -->
+    <div class="filter">
+      <label>
+        <input type="checkbox" v-model="showOnlyUndone" />
+        Tampilkan hanya yang belum selesai
+      </label>
+    </div>
+
     <!-- Daftar kegiatan -->
     <h2>Daftar Kegiatan:</h2>
     <ul>
-      <li v-for="activity in activities" :key="activity.id">
+      <li v-for="activity in filteredActivities" :key="activity.id">
         <label class="checkbox-label">
           <input type="checkbox" v-model="activity.done" />
           <span :class="{ done: activity.done }">{{ activity.name }}</span>
@@ -70,7 +83,7 @@ h1 {
 }
 
 .form {
-  margin-bottom: 1.5em;
+  margin-bottom: 1em;
 }
 
 input[type="text"] {
@@ -88,6 +101,13 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.filter {
+  margin-bottom: 1.5em;
+  text-align: left;
+  font-size: 0.9em;
+  color: #333;
 }
 
 ul {
