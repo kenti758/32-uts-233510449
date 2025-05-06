@@ -20,6 +20,11 @@ const addActivity = () => {
     newActivity.value = "";
   }
 };
+
+// Fungsi untuk menghapus kegiatan
+const removeActivity = (id) => {
+  activities.value = activities.value.filter(activity => activity.id !== id);
+};
 </script>
 
 <template>
@@ -38,6 +43,7 @@ const addActivity = () => {
     <ul>
       <li v-for="activity in activities" :key="activity.id">
         {{ activity.name }}
+        <button class="delete" @click="removeActivity(activity.id)">❌</button>
       </li>
     </ul>
   </div>
@@ -84,9 +90,23 @@ ul {
 
 li {
   background: #0a0505;
+  color: white;
   margin: 0.5em 0;
   padding: 0.75em;
   border-radius: 5px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete {
+  background-color: #ff4d4d;
+  padding: 0.3em 0.6em;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.9em;
+  cursor: pointer;
 }
 </style>
