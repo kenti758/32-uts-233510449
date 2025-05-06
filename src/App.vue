@@ -1,29 +1,35 @@
 <script setup>
 import { ref } from "vue";
 
-// Daftar kegiatan (ref agar reaktif)
+// Daftar kegiatan (dengan properti done)
 const activities = ref([
-  { id: 1, name: "Meeting with team" },
-  { id: 2, name: "Coffee with client" },
+  { id: 1, name: "Meeting with team", done: false },
+  { id: 2, name: "Coffee with client", done: false },
 ]);
 
 // Input kegiatan baru
 const newActivity = ref("");
 
-// Fungsi untuk menambah kegiatan
+// Tambah kegiatan baru
 const addActivity = () => {
   if (newActivity.value.trim() !== "") {
     activities.value.push({
       id: Date.now(),
       name: newActivity.value,
+      done: false,
     });
     newActivity.value = "";
   }
 };
 
-// Fungsi untuk menghapus kegiatan
+// Hapus kegiatan
 const removeActivity = (id) => {
   activities.value = activities.value.filter(activity => activity.id !== id);
+};
+
+// Toggle status selesai
+const toggleDone = (activity) => {
+  activity.done = !activity.done;
 };
 </script>
 
@@ -42,7 +48,10 @@ const removeActivity = (id) => {
     <h2>Daftar Kegiatan:</h2>
     <ul>
       <li v-for="activity in activities" :key="activity.id">
-        {{ activity.name }}
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="activity.done" @change="toggleDone(activity)" />
+          <span :class="{ done: activity.done }">{{ activity.name }}</span>
+        </label>
         <button class="delete" @click="removeActivity(activity.id)">❌</button>
       </li>
     </ul>
@@ -65,7 +74,7 @@ h1 {
   margin-bottom: 1.5em;
 }
 
-input {
+input[type="text"] {
   padding: 0.5em;
   width: 60%;
   margin-right: 0.5em;
@@ -98,6 +107,18 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex: 1;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #aaa;
 }
 
 .delete {
