@@ -83,7 +83,7 @@ ul {
 }
 
 li {
-  background: #f9f9f9;
+  background: #0a0505;
   margin: 0.5em 0;
   padding: 0.75em;
   border-radius: 5px;
