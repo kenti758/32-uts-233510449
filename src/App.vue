@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 
-// Daftar kegiatan (dengan properti done)
+// Daftar kegiatan (dengan properti 'done')
 const activities = ref([
   { id: 1, name: "Meeting with team", done: false },
   { id: 2, name: "Coffee with client", done: false },
@@ -10,7 +10,7 @@ const activities = ref([
 // Input kegiatan baru
 const newActivity = ref("");
 
-// Tambah kegiatan baru
+// Fungsi menambah kegiatan
 const addActivity = () => {
   if (newActivity.value.trim() !== "") {
     activities.value.push({
@@ -22,12 +22,12 @@ const addActivity = () => {
   }
 };
 
-// Hapus kegiatan
+// Fungsi menghapus kegiatan
 const removeActivity = (id) => {
   activities.value = activities.value.filter(activity => activity.id !== id);
 };
 
-// Toggle status selesai
+// Fungsi toggle centang selesai (opsional, bisa dihapus kalau pakai v-model)
 const toggleDone = (activity) => {
   activity.done = !activity.done;
 };
@@ -35,10 +35,9 @@ const toggleDone = (activity) => {
 
 <template>
   <div class="container">
-    <!-- Judul -->
     <h1>Aplikasi Kegiatan Harian</h1>
 
-    <!-- Form tambah kegiatan -->
+    <!-- Form input -->
     <div class="form">
       <input v-model="newActivity" placeholder="Masukkan kegiatan..." />
       <button @click="addActivity">Tambah</button>
@@ -49,7 +48,7 @@ const toggleDone = (activity) => {
     <ul>
       <li v-for="activity in activities" :key="activity.id">
         <label class="checkbox-label">
-          <input type="checkbox" v-model="activity.done" @change="toggleDone(activity)" />
+          <input type="checkbox" v-model="activity.done" />
           <span :class="{ done: activity.done }">{{ activity.name }}</span>
         </label>
         <button class="delete" @click="removeActivity(activity.id)">❌</button>
@@ -119,6 +118,8 @@ li {
 .done {
   text-decoration: line-through;
   color: #aaa;
+  transition: all 0.3s ease;
+  opacity: 0.7;
 }
 
 .delete {
